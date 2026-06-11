@@ -2,7 +2,7 @@ import React from 'react';
 import { LuTrophy, LuMedal, LuAward, LuShieldCheck } from 'react-icons/lu';
 import Reveal from '../Reveal';
 import Counter from '../Counter';
-import aboutUsImage from '../../assets/about_us.png';
+import aboutUsImage from '../../assets/about_us.webp';
 
 // Dummy awards data — editable.
 const AWARDS = [

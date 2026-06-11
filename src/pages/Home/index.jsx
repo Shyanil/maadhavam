@@ -20,7 +20,7 @@ import Testimonials from '../../components/Testimonials';
 import Awards from '../../components/Awards';
 import { CONTACT_INFO } from '../../utils/constants';
 import heroImage from '../../assets/hero_image_2.webp';
-import aboutUsImage from '../../assets/about_us.png';
+import aboutUsImage from '../../assets/about_us.webp';
 import edenImg from '../../assets/eden_devprayag.webp';
 import vinayakImg from '../../assets/vinayak_21_acre.webp';
 import bhawaniImg from '../../assets/bhawani_paraiso.webp';
