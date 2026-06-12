@@ -59,6 +59,7 @@ export default function HomeHero() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduceMotion = useRef(false);
+  const heroRef = useRef(null);
 
   // Resolve the user's motion preference once on mount.
   useEffect(() => {
@@ -79,13 +80,40 @@ export default function HomeHero() {
     setActive((i + SLIDES.length) % SLIDES.length);
   }, []);
 
+  const scrollToNextSection = useCallback(() => {
+    document.getElementById('projects')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }, []);
+
+  const updateCursorEffect = useCallback((event) => {
+    if (reduceMotion.current || !heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    heroRef.current.style.setProperty('--hh-cursor-x', `${x}%`);
+    heroRef.current.style.setProperty('--hh-cursor-y', `${y}%`);
+  }, []);
+
+  const resetCursorEffect = useCallback(() => {
+    if (!heroRef.current) return;
+    heroRef.current.style.setProperty('--hh-cursor-x', '50%');
+    heroRef.current.style.setProperty('--hh-cursor-y', '52%');
+  }, []);
+
   return (
     <section
+      ref={heroRef}
       className="hh"
       aria-roledescription="carousel"
       aria-label="Featured property highlights"
       onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseMove={updateCursorEffect}
+      onMouseLeave={() => {
+        setPaused(false);
+        resetCursorEffect();
+      }}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
@@ -165,6 +193,15 @@ export default function HomeHero() {
           </button>
         ))}
       </div>
+
+      <button
+        type="button"
+        className="hh-scroll-cue"
+        onClick={scrollToNextSection}
+        aria-label="Scroll to next section"
+      >
+        <span aria-hidden="true" />
+      </button>
     </section>
   );
 }

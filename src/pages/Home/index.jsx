@@ -1,12 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  LuUserCheck,
-  LuMapPin,
-  LuShieldCheck,
-  LuHandshake,
-  LuBuilding2,
-  LuChartColumnIncreasing,
   LuArrowRight,
   LuPhone,
   LuMessageCircle,
@@ -14,48 +8,15 @@ import {
 } from 'react-icons/lu';
 import SEO from '../../components/SEO';
 import HomeHero from '../../components/HomeHero';
+import Ticker from '../../components/Ticker';
 import FeaturedProjects from '../../components/FeaturedProjects';
 import PropertyServices from '../../components/PropertyServices';
 import Testimonials from '../../components/Testimonials';
 import Awards from '../../components/Awards';
 import { CONTACT_INFO } from '../../utils/constants';
-import aboutUsImage from '../../assets/about_us.webp';
 import edenImg from '../../assets/eden_devprayag.webp';
 import vinayakImg from '../../assets/vinayak_21_acre.webp';
 import bhawaniImg from '../../assets/bhawani_paraiso.webp';
-
-const WHY_CHOOSE_FEATURES = [
-  {
-    icon: LuUserCheck,
-    title: 'Personalized Consultation',
-    text: 'Tailored property recommendations based on your goals, budget, and lifestyle.',
-  },
-  {
-    icon: LuMapPin,
-    title: 'Market Expertise',
-    text: 'Deep knowledge of New Town, Rajarhat, Howrah and Hooghly markets.',
-  },
-  {
-    icon: LuShieldCheck,
-    title: 'Transparent Guidance',
-    text: 'Honest advice on pricing, documentation, and legal checks with complete clarity.',
-  },
-  {
-    icon: LuHandshake,
-    title: 'End-to-End Support',
-    text: 'From property selection to registration and possession, we are with you.',
-  },
-  {
-    icon: LuBuilding2,
-    title: 'Premium Developer Network',
-    text: 'Access to reputed developers and exclusive residential & commercial projects.',
-  },
-  {
-    icon: LuChartColumnIncreasing,
-    title: 'Investment Insights',
-    text: 'Guidance focused on long-term value and strong appreciation potential.',
-  },
-];
 
 const BLOG_PREVIEWS = [
   {
@@ -99,58 +60,8 @@ export default function Home() {
       {/* Hero Section — luxury editorial slider + glass search panel */}
       <HomeHero />
 
-      {/* Why Choose Section — same cream / maroon / gold palette as the hero */}
-      <section className="why-choose" id="why-choose">
-        <div className="container">
-          {/* Intro: text on the left, supporting photo on the right */}
-          <div className="why-choose-top">
-            <div className="why-choose-intro">
-              <p className="why-choose-eyebrow">
-                <span className="why-choose-eyebrow-text">Why Choose Madhavam Realty</span>
-                <span className="why-choose-eyebrow-rule" aria-hidden="true" />
-              </p>
-              <h2 className="why-choose-heading">
-                Your Trusted Partner in{' '}
-                <br className="why-choose-break" />
-                Real Estate Excellence
-              </h2>
-              <p className="why-choose-sub">
-                We combine local expertise, transparent processes, and personalized service to help you make the right property decisions with confidence.
-              </p>
-            </div>
-
-            <div className="why-choose-media">
-              <img
-                src={aboutUsImage}
-                alt="Madhavam Realty advisors reviewing property documents with a client"
-                className="why-choose-img"
-                loading="lazy"
-              />
-            </div>
-          </div>
-
-          {/* Six-up feature grid with vertical dividers */}
-          <div className="why-choose-grid">
-            {WHY_CHOOSE_FEATURES.map(({ icon: Icon, title, text }) => (
-              <article className="why-choose-feature" key={title}>
-                <span className="why-choose-icon" aria-hidden="true">
-                  <Icon />
-                </span>
-                <h3 className="why-choose-feature-title">{title}</h3>
-                <p className="why-choose-feature-text">{text}</p>
-              </article>
-            ))}
-          </div>
-
-          {/* Divider + centered CTA */}
-          <div className="why-choose-footer">
-            <Link to="/about" className="why-choose-cta">
-              Know More About Us
-              <LuArrowRight aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Highlights Ticker — lightweight auto-looping strip of differentiators */}
+      <Ticker />
 
       {/* Featured Projects — glowing hover slideshow */}
       <FeaturedProjects />

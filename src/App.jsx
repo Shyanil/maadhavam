@@ -3,12 +3,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import AppRoutes from './routes/AppRoutes';
+import Preloader from './components/Preloader';
 import './styles/globals.css';
 
 export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <Preloader />
         <AppRoutes />
         <Toaster 
           position="top-right" 
