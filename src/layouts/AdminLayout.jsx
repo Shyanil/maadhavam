@@ -3,6 +3,7 @@ import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { FiLayout, FiMail, FiLayers, FiFileText, FiTrendingUp, FiSettings, FiLogOut, FiHome } from 'react-icons/fi';
 import { ROUTES } from '../utils/constants';
+import '../styles/admin.css';
 
 export default function AdminLayout() {
   const { user, loading, logout } = useAuth();

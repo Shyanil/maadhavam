@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../services/supabase';
 
 const isMockEnabled = () => {
-  return import.meta.env.VITE_SUPABASE_URL === undefined || 
-         import.meta.env.VITE_SUPABASE_URL.includes('placeholder-url');
+  return false;
 };
 
 export function useAuth() {

@@ -21,10 +21,10 @@ export const ROUTES = {
 };
 
 export const CONTACT_INFO = {
-  phone: '+91 98765 43210',
-  whatsapp: '919876543210',
-  email: 'info@madhavamrealty.com',
-  address: '1st Floor, Madhavam Plaza, City Centre, Gwalior, MP, India',
+  phone: '+91 98756 56616',
+  whatsapp: '919875656616',
+  email: 'maadhavamrealty@gmail.com',
+  address: '3/1/A, Guha Park, Howrah - 711204, West Bengal, India',
   workingHours: 'Mon - Sat: 10:00 AM - 7:00 PM',
 };
 

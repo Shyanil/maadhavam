@@ -42,7 +42,7 @@ export default function ContactSection() {
         <Reveal className="contact-info" y={28}>
           <span className="contact-info-grid" aria-hidden="true" />
           <div className="contact-info-inner">
-            <p className="eyebrow eyebrow--light">
+            <p className="eyebrow">
               Get In Touch
               <span className="eyebrow-rule" aria-hidden="true" />
             </p>

@@ -34,24 +34,24 @@ export default function AdminAnalytics() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
           
           {/* Monthly Conversions */}
-          <div className="glass-card" style={{ padding: '30px', backgroundColor: 'white' }}>
-            <h3 style={{ marginBottom: '20px' }}>Monthly Site-Visit Conversions</h3>
+          <div className="glass-card" style={{ padding: '30px' }}>
+            <h3 style={{ marginBottom: '20px', color: 'var(--admin-text-primary)', fontFamily: 'var(--font-serif)' }}>Monthly Site-Visit Conversions</h3>
             <div style={{ width: '100%', height: 260 }}>
               <ResponsiveContainer>
                 <BarChart data={MONTHLY_CONVERSIONS}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="Conversions" fill="var(--primary)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.08)" />
+                  <XAxis dataKey="name" stroke="var(--admin-text-secondary)" tick={{ fill: 'var(--admin-text-secondary)', fontSize: 12 }} />
+                  <YAxis stroke="var(--admin-text-secondary)" tick={{ fill: 'var(--admin-text-secondary)', fontSize: 12 }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#121520', borderColor: 'var(--admin-border)', color: 'var(--admin-text-primary)' }} />
+                  <Bar dataKey="Conversions" fill="var(--admin-accent-gold)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Leads by Source */}
-          <div className="glass-card" style={{ padding: '30px', backgroundColor: 'white' }}>
-            <h3 style={{ marginBottom: '20px' }}>Inquiries By Acquisition Source</h3>
+          <div className="glass-card" style={{ padding: '30px' }}>
+            <h3 style={{ marginBottom: '20px', color: 'var(--admin-text-primary)', fontFamily: 'var(--font-serif)' }}>Inquiries By Acquisition Source</h3>
             <div style={{ width: '100%', height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ResponsiveContainer>
                 <PieChart>
@@ -63,17 +63,17 @@ export default function AdminAnalytics() {
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
-                    label
+                    label={{ fill: 'var(--admin-text-primary)', fontSize: 11 }}
                   >
                     {LEADS_BY_SOURCE.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip contentStyle={{ backgroundColor: '#121520', borderColor: 'var(--admin-border)', color: 'var(--admin-text-primary)' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '10px', fontSize: 'var(--text-xs)' }}>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--admin-text-secondary)' }}>
               {LEADS_BY_SOURCE.map((entry, idx) => (
                 <span key={entry.name} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ width: '10px', height: '10px', backgroundColor: COLORS[idx], borderRadius: '50%', display: 'inline-block' }}></span>

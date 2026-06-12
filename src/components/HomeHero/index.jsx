@@ -57,7 +57,6 @@ const AUTOPLAY_MS = 2500;
 
 export default function HomeHero() {
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const reduceMotion = useRef(false);
   const heroRef = useRef(null);
 
@@ -66,15 +65,15 @@ export default function HomeHero() {
     reduceMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
 
-  // Auto-advance quickly. The timer is keyed on `active`/`paused`, so manual
-  // navigation restarts the full interval and hovering/focusing pauses it.
+  // Auto-advance quickly. The timer is keyed on `active`, so manual
+  // navigation restarts the full interval.
   useEffect(() => {
-    if (reduceMotion.current || paused) return undefined;
+    if (reduceMotion.current) return undefined;
     const id = setTimeout(() => {
       setActive((a) => (a + 1) % SLIDES.length);
     }, AUTOPLAY_MS);
     return () => clearTimeout(id);
-  }, [active, paused]);
+  }, [active]);
 
   const goTo = useCallback((i) => {
     setActive((i + SLIDES.length) % SLIDES.length);
@@ -108,14 +107,8 @@ export default function HomeHero() {
       className="hh"
       aria-roledescription="carousel"
       aria-label="Featured property highlights"
-      onMouseEnter={() => setPaused(true)}
       onMouseMove={updateCursorEffect}
-      onMouseLeave={() => {
-        setPaused(false);
-        resetCursorEffect();
-      }}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      onMouseLeave={resetCursorEffect}
     >
       <div className="hh-bg" aria-hidden="true">
         {SLIDES.map((s, i) => (

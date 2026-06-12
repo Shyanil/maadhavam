@@ -1,8 +1,7 @@
 import { supabase } from './supabase';
 
 const isMockEnabled = () => {
-  return import.meta.env.VITE_SUPABASE_URL === undefined || 
-         import.meta.env.VITE_SUPABASE_URL.includes('placeholder-url');
+  return false;
 };
 
 // Mock Projects database
@@ -116,9 +115,14 @@ export const projectService = {
       return { data: newProject, error: null };
     }
 
+    const withSlug = {
+      slug: projectData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      ...projectData
+    };
+
     const { data, error } = await supabase
       .from('projects')
-      .insert([projectData])
+      .insert([withSlug])
       .select();
     return { data: data ? data[0] : null, error };
   },

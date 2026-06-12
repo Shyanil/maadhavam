@@ -1,8 +1,7 @@
 import { supabase } from './supabase';
 
 const isMockEnabled = () => {
-  return import.meta.env.VITE_SUPABASE_URL === undefined || 
-         import.meta.env.VITE_SUPABASE_URL.includes('placeholder-url');
+  return false;
 };
 
 const getLocalLeads = () => {

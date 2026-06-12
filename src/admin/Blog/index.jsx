@@ -77,8 +77,7 @@ export default function AdminBlog() {
           </div>
           <button 
             onClick={() => setShowAddForm(!showAddForm)} 
-            className="btn btn-primary"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            className="btn-admin-primary"
           >
             <FiPlus /> {showAddForm ? 'Close Form' : 'Write Article'}
           </button>
@@ -86,34 +85,34 @@ export default function AdminBlog() {
 
         {/* Form Panel */}
         {showAddForm && (
-          <form onSubmit={handleSubmit} className="glass-card" style={{ padding: '30px', backgroundColor: 'white', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <form onSubmit={handleSubmit} className="glass-card" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Article Title</label>
-              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Why Gwalior Airport Road properties are appreciating fast" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Article Title</label>
+              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Why Gwalior Airport Road properties are appreciating fast" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Excerpt / Summary</label>
-              <input type="text" required value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Brief summary of the article..." style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Excerpt / Summary</label>
+              <input type="text" required value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Brief summary of the article..." className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', gap: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Author Name</label>
-                <input type="text" required value={author} onChange={(e) => setAuthor(e.target.value)} style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Author Name</label>
+                <input type="text" required value={author} onChange={(e) => setAuthor(e.target.value)} className="admin-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Image URL</label>
-                <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Image URL</label>
+                <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" className="admin-input" />
               </div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Full Article Body</label>
-              <textarea required rows="8" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Detailed paragraphs content here..." style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Full Article Body</label>
+              <textarea required rows="8" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Detailed paragraphs content here..." className="admin-textarea" />
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ borderRadius: 'var(--radius-sm)' }}>
+            <button type="submit" className="btn-admin-primary">
               Publish Blog Post
             </button>
           </form>
@@ -121,7 +120,7 @@ export default function AdminBlog() {
 
         {/* Listings Table */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>Loading articles...</div>
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-secondary)' }}>Loading articles...</div>
         ) : (
           <div className="admin-table-container">
             <table className="admin-table">
@@ -144,13 +143,13 @@ export default function AdminBlog() {
                       <strong>{blog.title}</strong>
                     </td>
                     <td>{blog.author}</td>
-                    <td style={{ color: 'var(--neutral-600)', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td style={{ color: 'var(--admin-text-secondary)', maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {blog.excerpt}
                     </td>
                     <td>
                       <button 
                         onClick={() => handleDelete(blog.id)} 
-                        style={{ color: 'var(--error)', cursor: 'pointer', padding: '8px' }}
+                        style={{ color: 'var(--admin-error)', cursor: 'pointer', padding: '8px', background: 'none', border: 'none' }}
                         title="Delete Article"
                       >
                         <FiTrash2 size={16} />

@@ -1,15 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
-import {
-  LuArrowUpRight,
-  LuArrowRight,
-  LuMapPin,
-  LuBuilding2,
-  LuChevronDown,
-  LuSearch,
-  LuRotateCcw,
-} from 'react-icons/lu';
+import { LuChevronLeft, LuChevronRight, LuArrowUpRight, LuArrowRight } from 'react-icons/lu';
 
 import edenImg from '../../assets/eden_devprayag.webp';
 import vinayakImg from '../../assets/vinayak_21_acre.webp';
@@ -17,300 +8,228 @@ import bhawaniImg from '../../assets/bhawani_paraiso.webp';
 import dtcImg from '../../assets/dtc_still_waters.webp';
 import psImg from '../../assets/ps_sansara.webp';
 
-/*
- * Each project carries the metadata the search panel filters on:
- *   intent   — which of Buy / Rent it is available for
- *   location — one of the four serviced areas
- *   type     — Residential / Commercial / Land
- * Edit titles, tags or metadata here and both the list and the filter update.
- */
 const SLIDES = [
-  { id: 'eden', title: 'Eden Devprayag', tag: 'Hillside Residences', image: edenImg, location: 'New Town', type: 'Residential', intent: ['buy'] },
-  { id: 'vinayak', title: 'Vinayak 21 Acre', tag: 'Plotted Township', image: vinayakImg, location: 'Rajarhat', type: 'Land', intent: ['buy'] },
-  { id: 'bhawani', title: 'Bhawani Paraiso', tag: 'Premium Apartments', image: bhawaniImg, location: 'Howrah', type: 'Residential', intent: ['buy', 'rent'] },
-  { id: 'dtc', title: 'DTC Still Waters', tag: 'Waterfront Homes', image: dtcImg, location: 'Hooghly', type: 'Residential', intent: ['buy'] },
-  { id: 'ps', title: 'PS Sansara', tag: 'Signature Living', image: psImg, location: 'New Town', type: 'Commercial', intent: ['rent'] },
+  { id: 'eden', title: 'Eden Devprayag', tag: 'Hillside Residences', image: edenImg, location: 'New Town, Kolkata', type: 'Residential', originalIndex: 0 },
+  { id: 'vinayak', title: 'Vinayak 21 Acre', tag: 'Plotted Township', image: vinayakImg, location: 'Rajarhat, Kolkata', type: 'Land', originalIndex: 1 },
+  { id: 'bhawani', title: 'Bhawani Paraiso', tag: 'Premium Apartments', image: bhawaniImg, location: 'Howrah, Kolkata', type: 'Residential', originalIndex: 2 },
+  { id: 'dtc', title: 'DTC Still Waters', tag: 'Waterfront Homes', image: dtcImg, location: 'Hooghly, Kolkata', type: 'Residential', originalIndex: 3 },
+  { id: 'ps', title: 'PS Sansara', tag: 'Signature Living', image: psImg, location: 'New Town, Kolkata', type: 'Commercial', originalIndex: 4 },
 ];
 
-const LOCATIONS = ['New Town', 'Rajarhat', 'Howrah', 'Hooghly'];
-const TYPES = ['Residential', 'Commercial', 'Land'];
-
-/* The clip-path "wipe" the active project's image reveals with. */
-const clipPathVariants = {
-  visible: { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' },
-  hidden: { clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)' },
-};
-
-function splitText(text) {
-  return text
-    .split(' ')
-    .map((word) => word.concat(' '))
-    .map((word) => word.split(''))
-    .flat(1);
-}
-
-/* Per-character "wipe up" reveal — faded base slides out, full-colour slides in.
-   Hidden from assistive tech (the row's aria-label carries the real name). */
-function StaggerTitle({ text, isActive }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return (
-      <span className="fp-row-title-text" data-active={isActive} aria-hidden="true">
-        {text}
-      </span>
-    );
-  }
-
-  const characters = splitText(text);
-  return (
-    <span className="fp-row-title-text" aria-hidden="true">
-      {characters.map((char, i) => (
-        <span key={`${char}-${i}`} className="fp-char">
-          <MotionConfig
-            transition={{ delay: i * 0.022, duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
-            <motion.span
-              className="fp-char-base"
-              initial={{ y: '0%' }}
-              animate={isActive ? { y: '-110%' } : { y: '0%' }}
-            >
-              {char}
-              {char === ' ' && i < characters.length - 1 && <>&nbsp;</>}
-            </motion.span>
-            <motion.span
-              className="fp-char-reveal"
-              initial={{ y: '110%' }}
-              animate={isActive ? { y: '0%' } : { y: '110%' }}
-            >
-              {char}
-            </motion.span>
-          </MotionConfig>
-        </span>
-      ))}
-    </span>
-  );
-}
-
-function ProjectRow({ project, index, isActive, onActivate }) {
-  const reduceMotion = useReducedMotion();
-  return (
-    <li className="fp-row-item">
-      <Link
-        to="/projects"
-        className={`fp-row${isActive ? ' is-active' : ''}`}
-        onMouseEnter={() => onActivate(index)}
-        onFocus={() => onActivate(index)}
-        aria-label={`${project.title} — ${project.type} in ${project.location}. View project.`}
-      >
-        <span className="fp-row-index">{String(index + 1).padStart(2, '0')}</span>
-
-        <span className="fp-row-main">
-          <span className="fp-row-title">
-            <StaggerTitle text={project.title} isActive={isActive} />
-          </span>
-          <span className="fp-row-meta">
-            {project.tag} <span aria-hidden="true">·</span> {project.location}{' '}
-            <span aria-hidden="true">·</span> {project.type}
-          </span>
-        </span>
-
-        <span className="fp-row-media" aria-hidden="true">
-          <motion.img
-            className="fp-row-img"
-            src={project.image}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            variants={clipPathVariants}
-            initial="hidden"
-            animate={isActive ? 'visible' : 'hidden'}
-            transition={{ ease: [0.33, 1, 0.68, 1], duration: reduceMotion ? 0 : 0.7 }}
-          />
-        </span>
-
-        <span className="fp-row-arrow" aria-hidden="true">
-          <LuArrowUpRight />
-        </span>
-
-        <span className="fp-row-underline" aria-hidden="true" />
-      </Link>
-    </li>
-  );
-}
-
 export default function FeaturedProjects() {
-  // Pending search-panel selections.
-  const [intent, setIntent] = useState('buy');
-  const [location, setLocation] = useState('');
-  const [type, setType] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('All');
+  const [filteredSlides, setFilteredSlides] = useState(SLIDES);
+  const [active, setActive] = useState(SLIDES.length);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [showCursor, setShowCursor] = useState(false);
+  const [isHoveringCard, setIsHoveringCard] = useState(false);
+  const autoplayTimer = useRef(null);
 
-  // Applied filter (null = no search yet, show the full curated list).
-  const [applied, setApplied] = useState(null);
-  const [active, setActive] = useState(0);
+  const displaySlides = React.useMemo(() => {
+    return [...filteredSlides, ...filteredSlides, ...filteredSlides];
+  }, [filteredSlides]);
 
-  const visible = useMemo(() => {
-    if (!applied) return SLIDES;
-    return SLIDES.filter(
-      (s) =>
-        s.intent.includes(applied.intent) &&
-        (!applied.location || s.location === applied.location) &&
-        (!applied.type || s.type === applied.type),
-    );
-  }, [applied]);
+  const handleNext = useCallback(() => {
+    setActive((prev) => prev + 1);
+  }, []);
 
-  // Guard against an active index left dangling after the list shrinks.
-  const activeIndex = Math.min(active, Math.max(0, visible.length - 1));
+  const handlePrev = useCallback(() => {
+    setActive((prev) => prev - 1);
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setApplied({ intent, location, type });
-    setActive(0); // reveal the first match
+  const handleMouseMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCursorPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  }, []);
+
+  const handleFilterChange = (loc) => {
+    setSelectedLocation(loc);
+    let result = SLIDES;
+    if (loc !== 'All') {
+      if (loc === 'Howrah & Hooghly') {
+        result = SLIDES.filter(s => s.location.includes('Howrah') || s.location.includes('Hooghly'));
+      } else {
+        result = SLIDES.filter(s => s.location.includes(loc));
+      }
+    }
+    setFilteredSlides(result);
+    setIsTransitioning(false);
+    setActive(result.length);
+
+    setTimeout(() => {
+      setIsTransitioning(true);
+    }, 50);
   };
 
-  const handleClear = () => {
-    setApplied(null);
-    setIntent('buy');
-    setLocation('');
-    setType('');
-    setActive(0);
-  };
+  // Handle wrapping around for infinite scrolling
+  useEffect(() => {
+    if (active >= filteredSlides.length * 2) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setActive(active - filteredSlides.length);
+      }, 600); // matches transition speed
+      return () => clearTimeout(timer);
+    }
+    if (active < filteredSlides.length) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setActive(active + filteredSlides.length);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [active, filteredSlides.length]);
 
-  const countLabel = `${visible.length} ${visible.length === 1 ? 'Project' : 'Projects'}${
-    applied ? ' found' : ''
-  }`;
+  // Turn transitions back on after jump
+  useEffect(() => {
+    if (!isTransitioning) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isTransitioning]);
+
+  // Autoplay
+  useEffect(() => {
+    if (paused) return undefined;
+    autoplayTimer.current = setInterval(() => {
+      handleNext();
+    }, 3000);
+    return () => {
+      if (autoplayTimer.current) clearInterval(autoplayTimer.current);
+    };
+  }, [paused, handleNext]);
 
   return (
     <section className="featured" id="projects">
+      {/* Header and Title inside the standard page container */}
       <div className="container">
-        <div className="featured-panel">
-          {/* Header */}
-          <p className="featured-eyebrow">
-            <span className="featured-eyebrow-text">Featured Projects</span>
-            <span className="featured-eyebrow-rule" aria-hidden="true" />
-          </p>
-          <h2 className="featured-heading">
-            Signature developments,
-            <br className="featured-break" /> crafted to last
-          </h2>
-          <p className="featured-sub">
-            Tell us what you&rsquo;re looking for, then explore our portfolio of
-            residences, townships, and waterfront homes across Kolkata.
-          </p>
+        <div className="featured-header-row">
+          <div className="featured-header-left">
+            <p className="featured-eyebrow">
+              <span className="featured-eyebrow-text">Featured Projects</span>
+              <span className="featured-eyebrow-rule" aria-hidden="true" />
+            </p>
+            <h2 className="featured-heading">
+              Signature developments, crafted to last
+            </h2>
+          </div>
 
-          {/* ---- Search panel ---- */}
-          <form className="fp-search" onSubmit={handleSubmit}>
-            <div
-              className="fp-search-tabs"
-              role="group"
-              aria-label="Looking to buy or rent"
+          {/* Navigation arrows */}
+          <div className="featured-arrows">
+            <button
+              type="button"
+              className="featured-arrow-btn"
+              onClick={handlePrev}
+              aria-label="Previous projects"
             >
-              {['buy', 'rent'].map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  className={`fp-tab${intent === mode ? ' is-active' : ''}`}
-                  aria-pressed={intent === mode}
-                  onClick={() => setIntent(mode)}
-                >
-                  {mode === 'buy' ? 'Buy' : 'Rent'}
-                </button>
-              ))}
-            </div>
-
-            <div className="fp-search-fields">
-              <label className="fp-field">
-                <span className="fp-field-label">Location</span>
-                <span className="fp-field-control">
-                  <LuMapPin className="fp-field-icon" aria-hidden="true" />
-                  <select
-                    className="fp-select"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  >
-                    <option value="">All locations</option>
-                    {LOCATIONS.map((loc) => (
-                      <option key={loc} value={loc}>
-                        {loc}
-                      </option>
-                    ))}
-                  </select>
-                  <LuChevronDown className="fp-field-chevron" aria-hidden="true" />
-                </span>
-              </label>
-
-              <label className="fp-field">
-                <span className="fp-field-label">Property Type</span>
-                <span className="fp-field-control">
-                  <LuBuilding2 className="fp-field-icon" aria-hidden="true" />
-                  <select
-                    className="fp-select"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                  >
-                    <option value="">All types</option>
-                    {TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                  <LuChevronDown className="fp-field-chevron" aria-hidden="true" />
-                </span>
-              </label>
-
-              <button type="submit" className="fp-find">
-                <LuSearch aria-hidden="true" />
-                Find Property
-              </button>
-            </div>
-          </form>
-
-          {/* ---- Result count + clear ---- */}
-          <div className="fp-list-head">
-            <span className="fp-list-count">{countLabel}</span>
-            {applied && (
-              <button type="button" className="fp-clear" onClick={handleClear}>
-                <LuRotateCcw aria-hidden="true" />
-                Clear filters
-              </button>
-            )}
+              <LuChevronLeft aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="featured-arrow-btn"
+              onClick={handleNext}
+              aria-label="Next projects"
+            >
+              <LuChevronRight aria-hidden="true" />
+            </button>
           </div>
+        </div>
 
-          {/* ---- Row-by-row project list ---- */}
-          {visible.length > 0 ? (
-            <ul className="fp-list">
-              {visible.map((project, index) => (
-                <ProjectRow
-                  key={project.id}
-                  project={project}
-                  index={index}
-                  isActive={index === activeIndex}
-                  onActivate={setActive}
-                />
-              ))}
-            </ul>
-          ) : (
-            <div className="fp-empty">
-              <p className="fp-empty-title">No matching properties</p>
-              <p className="fp-empty-text">
-                We couldn&rsquo;t find a featured project for that combination. Try a
-                different location or property type.
-              </p>
-              <button type="button" className="fp-clear" onClick={handleClear}>
-                <LuRotateCcw aria-hidden="true" />
-                Reset search
+        {/* Location Filters */}
+        <div className="featured-filter-row">
+          <div className="featured-filters" role="group" aria-label="Filter projects by location">
+            {['All', 'New Town', 'Rajarhat', 'Howrah & Hooghly'].map((loc) => (
+              <button
+                key={loc}
+                type="button"
+                className={`featured-filter-btn${selectedLocation === loc ? ' is-active' : ''}`}
+                onClick={() => handleFilterChange(loc)}
+              >
+                {loc}
               </button>
-            </div>
-          )}
+            ))}
+          </div>
+        </div>
+      </div>
 
-          {/* Footer CTA */}
-          <div className="featured-footer">
-            <Link to="/projects" className="featured-cta">
-              Explore All Projects
-              <LuArrowRight aria-hidden="true" />
+      {/* Carousel container outside container (full-bleed layout) */}
+      <div
+        className="fpc-container"
+        onMouseEnter={() => {
+          setPaused(true);
+          setShowCursor(true);
+        }}
+        onMouseLeave={() => {
+          setPaused(false);
+          setShowCursor(false);
+          setIsHoveringCard(false);
+        }}
+        onMouseMove={handleMouseMove}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
+        {/* Custom follow cursor tracking wrapper */}
+        <div
+          className="fpc-custom-cursor-wrapper"
+          style={{
+            transform: `translate3d(${cursorPos.x}px, ${cursorPos.y}px, 0)`
+          }}
+        >
+          <div className={`fpc-custom-cursor${showCursor ? ' is-visible' : ''}${isHoveringCard ? ' is-hovered' : ''}`}>
+            <span>View<br />Project</span>
+          </div>
+        </div>
+
+        <div
+          className="fpc-track"
+          style={{
+            transform: `translateX(var(--fpc-translate))`,
+            transition: isTransitioning ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+            '--fpc-translate': `calc(-${active} * var(--fpc-slide-width-with-gap))`
+          }}
+        >
+          {displaySlides.map((project, idx) => (
+            <Link
+              key={`${project.id}-${idx}`}
+              to="/projects"
+              className="fpc-card"
+              aria-label={`${project.title} in ${project.location}. Click to view details.`}
+              onMouseEnter={() => setIsHoveringCard(true)}
+              onMouseLeave={() => setIsHoveringCard(false)}
+            >
+              <div className="fpc-card-img-box">
+                <img src={project.image} alt="" loading="lazy" />
+                <div className="fpc-card-overlay">
+                  <span className="fpc-card-number">{String(project.originalIndex + 1).padStart(2, '0')}</span>
+                  <div className="fpc-card-text">
+                    <span className="fpc-card-city">{project.location}</span>
+                    <h3 className="fpc-card-title">{project.title}</h3>
+                    <p className="fpc-card-meta">{project.tag} · {project.type}</p>
+                  </div>
+                  <span className="fpc-card-cta">
+                    View Details
+                    <LuArrowUpRight aria-hidden="true" />
+                  </span>
+                </div>
+              </div>
             </Link>
-          </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer CTA inside the container */}
+      <div className="container">
+        <div className="featured-footer">
+          <Link to="/projects" className="featured-cta">
+            Explore All Projects
+            <LuArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </section>

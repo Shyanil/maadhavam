@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import SEO from '../../components/SEO';
+import '../../styles/admin.css';
 
 export default function AdminLogin() {
   const { login, user, loading } = useAuth();
@@ -29,29 +26,28 @@ export default function AdminLogin() {
     <>
       <SEO customTitle="Admin Portal Login | Madhavam Realty" />
       
-      <section style={{
-        minHeight: '90vh',
+      <section className="admin-container" style={{
+        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'var(--neutral-200)',
         padding: '20px'
       }}>
         <div className="glass-card animate-fade-in" style={{ padding: '40px', width: '100%', maxWidth: '420px' }}>
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-            <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--secondary)' }}>Madhavam Realty</h2>
-            <p style={{ color: 'var(--neutral-600)', fontSize: 'var(--text-sm)', marginTop: '4px' }}>Admin Dashboard Sign In</p>
+            <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--admin-accent-gold)' }}>Madhavam Realty</h2>
+            <p style={{ color: 'var(--admin-text-secondary)', fontSize: 'var(--text-sm)', marginTop: '4px' }}>Admin Dashboard Sign In</p>
           </div>
 
           {errorMsg && (
             <div style={{
-              backgroundColor: 'rgba(231, 29, 54, 0.12)',
-              color: 'var(--error)',
+              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+              color: 'var(--admin-error)',
               padding: '12px 16px',
-              borderRadius: 'var(--radius-md)',
+              borderRadius: '8px',
               fontSize: 'var(--text-sm)',
               marginBottom: '20px',
-              border: '1px solid rgba(231, 29, 54, 0.2)'
+              border: '1px solid rgba(239, 68, 68, 0.2)'
             }}>
               {errorMsg}
             </div>
@@ -59,7 +55,7 @@ export default function AdminLogin() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label htmlFor="email" style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Email Address</label>
+              <label htmlFor="email" style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Email Address</label>
               <input 
                 id="email"
                 type="email" 
@@ -67,17 +63,12 @@ export default function AdminLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@madhavam.com"
-                style={{
-                  padding: '12px 16px',
-                  border: '1px solid var(--neutral-400)',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'white'
-                }}
+                className="admin-input"
               />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label htmlFor="password" style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Password</label>
+              <label htmlFor="password" style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Password</label>
               <input 
                 id="password"
                 type="password" 
@@ -85,27 +76,22 @@ export default function AdminLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                style={{
-                  padding: '12px 16px',
-                  border: '1px solid var(--neutral-400)',
-                  borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'white'
-                }}
+                className="admin-input"
               />
             </div>
 
             <button 
               type="submit" 
               disabled={loading}
-              className="btn btn-primary" 
-              style={{ width: '100%', borderRadius: 'var(--radius-md)', padding: '14px' }}
+              className="btn-admin-primary" 
+              style={{ width: '100%', padding: '14px', borderRadius: '8px' }}
             >
               {loading ? 'Verifying...' : 'Sign In'}
             </button>
           </form>
           
-          <div style={{ textAlign: 'center', marginTop: '20px', fontSize: 'var(--text-xs)', color: 'var(--neutral-600)' }}>
-            <p>Mock login: <strong>admin@madhavam.com</strong> / <strong>admin123</strong></p>
+          <div style={{ textAlign: 'center', marginTop: '20px', fontSize: 'var(--text-xs)', color: 'var(--admin-text-secondary)' }}>
+            <p>Admin credentials: <strong>admin@madhavam.com</strong> / <strong>AdminPassword123!</strong></p>
           </div>
         </div>
       </section>

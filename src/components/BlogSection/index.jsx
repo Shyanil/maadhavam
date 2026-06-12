@@ -1,137 +1,261 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { LuCalendar, LuClock, LuArrowRight } from 'react-icons/lu';
+import { LuChevronRight, LuChevronLeft } from 'react-icons/lu';
 import Reveal from '../Reveal';
 
-const IMG = (id) =>
-  `https://images.unsplash.com/photo-${id}?w=800&q=80&auto=format&fit=crop`;
+// Import local assets for blog images
+import edenImg from '../../assets/eden_devprayag.webp';
+import vinayakImg from '../../assets/vinayak_21_acre.webp';
+import bhawaniImg from '../../assets/bhawani_paraiso.webp';
+import dtcImg from '../../assets/dtc_still_waters.webp';
+import psImg from '../../assets/ps_sansara.webp';
+import slider3Img from '../../assets/hero_slider_3.webp';
 
-// Dummy blog data — editable.
 const POSTS = [
   {
+    id: 'post-1',
     tag: 'Buying Guide',
-    date: 'Jun 02, 2026',
-    read: '5 min read',
-    title: '5 Things to Check Before Buying Property in New Town',
-    excerpt:
-      'From legal due diligence to connectivity, here is what every first-time buyer in New Town should verify before signing.',
-    image: IMG('1560518883-ce09059eeffa'),
-  },
-  {
-    tag: 'Market Insights',
-    date: 'May 20, 2026',
+    date: 'Jun 12, 2026',
     read: '4 min read',
-    title: "Why Rajarhat Is Kolkata's Fastest-Growing Investment Hub",
-    excerpt:
-      'Infrastructure, IT corridors, and steady appreciation make Rajarhat one of the smartest places to invest this year.',
-    image: IMG('1568605114967-8130f3a36994'),
+    title: 'How to Choose the Right Property Location in Kolkata',
+    excerpt: 'Verify legal due diligence, transport connections, and long-term values before signing.',
+    image: edenImg,
+    category: 'Buying Guide',
+    originalIndex: 0
   },
   {
+    id: 'post-2',
+    tag: 'Market Trends',
+    date: 'May 28, 2026',
+    read: '5 min read',
+    title: 'Residential vs Commercial: Which Segment Offers Higher Yield?',
+    excerpt: 'Compare the capital timelines, risks, and rental yields of residential vs commercial segments.',
+    image: vinayakImg,
+    category: 'Market Trends',
+    originalIndex: 1
+  },
+  {
+    id: 'post-3',
     tag: 'Investment',
-    date: 'May 08, 2026',
+    date: 'May 15, 2026',
+    read: '3 min read',
+    title: 'Understanding Kolkata Real Estate Appreciation Rates',
+    excerpt: 'Analyze Gwalior and Kolkata growth corridors to find high-appreciation plotted layouts.',
+    image: bhawaniImg,
+    category: 'Investment',
+    originalIndex: 2
+  },
+  {
+    id: 'post-4',
+    tag: 'Buying Guide',
+    date: 'May 02, 2026',
     read: '6 min read',
-    title: 'Residential vs Commercial: Which Investment Suits You?',
-    excerpt:
-      'We break down the returns, risks, and long-term value of residential and commercial properties in Kolkata.',
-    image: IMG('1582407947304-fd86f028f716'),
+    title: 'Top Legal Checklist Before Buying Land or Plots',
+    excerpt: 'Verify mutation papers, title deeds, land tax receipts, and municipal conversion clearance.',
+    image: dtcImg,
+    category: 'Buying Guide',
+    originalIndex: 3
+  },
+  {
+    id: 'post-5',
+    tag: 'Investment',
+    date: 'Apr 18, 2026',
+    read: '4 min read',
+    title: 'Maximize Your Commercial Property Rental Returns',
+    excerpt: 'Identify corporate tenant criteria, yield optimization tips, and commercial lease layouts.',
+    image: psImg,
+    category: 'Investment',
+    originalIndex: 4
+  },
+  {
+    id: 'post-6',
+    tag: 'Market Trends',
+    date: 'Apr 05, 2026',
+    read: '5 min read',
+    title: 'Why Newtown and Rajarhat are Kolkata\'s Hottest Hubs',
+    excerpt: 'Investigate commercial IT park expansions, transit links, and premium developer projects.',
+    image: slider3Img,
+    category: 'Market Trends',
+    originalIndex: 5
   },
 ];
 
-const Media = ({ post }) => (
-  <div className="blog-card-media">
-    <img
-      src={post.image}
-      alt={post.title}
-      loading="lazy"
-      onError={(e) => {
-        e.currentTarget.style.display = 'none';
-      }}
-    />
-    <span className="blog-card-tag">{post.tag}</span>
-  </div>
-);
-
-const Meta = ({ post }) => (
-  <span className="blog-card-meta">
-    <span>
-      <LuCalendar aria-hidden="true" />
-      {post.date}
-    </span>
-    <span>
-      <LuClock aria-hidden="true" />
-      {post.read}
-    </span>
-  </span>
-);
-
 export default function BlogSection() {
-  const [featured, ...rest] = POSTS;
+  const [selectedFilter, setSelectedFilter] = useState('All');
+  const [active, setActive] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const autoplayTimer = useRef(null);
+
+  const filteredPosts = useMemo(() => {
+    if (selectedFilter === 'All') return POSTS;
+    return POSTS.filter(post => post.tag === selectedFilter || post.category === selectedFilter);
+  }, [selectedFilter]);
+
+  // Replicate the list three times for seamless infinite loop translation
+  const displayPosts = useMemo(() => {
+    if (filteredPosts.length === 0) return [];
+    return [...filteredPosts, ...filteredPosts, ...filteredPosts];
+  }, [filteredPosts]);
+
+  // Initialize active index in the middle set of cloned items
+  useEffect(() => {
+    setIsTransitioning(false);
+    setActive(filteredPosts.length);
+    setTimeout(() => {
+      setIsTransitioning(true);
+    }, 50);
+  }, [filteredPosts.length]);
+
+  const handleNext = useCallback(() => {
+    if (filteredPosts.length === 0) return;
+    setActive((prev) => prev + 1);
+  }, [filteredPosts.length]);
+
+  const handlePrev = useCallback(() => {
+    if (filteredPosts.length === 0) return;
+    setActive((prev) => prev - 1);
+  }, [filteredPosts.length]);
+
+  // Autoplay loop
+  useEffect(() => {
+    if (paused || filteredPosts.length === 0) return undefined;
+    autoplayTimer.current = setInterval(() => {
+      handleNext();
+    }, 4000);
+    return () => {
+      if (autoplayTimer.current) clearInterval(autoplayTimer.current);
+    };
+  }, [paused, handleNext, filteredPosts.length]);
+
+  // Seamless jump wrap-around for infinite scroll
+  useEffect(() => {
+    if (filteredPosts.length === 0) return;
+    if (active >= filteredPosts.length * 2) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setActive(active - filteredPosts.length);
+      }, 600); // matches transition time
+      return () => clearTimeout(timer);
+    }
+    if (active < filteredPosts.length) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false);
+        setActive(active + filteredPosts.length);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [active, filteredPosts.length]);
+
+  // Turn transition back on after jump
+  useEffect(() => {
+    if (!isTransitioning) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isTransitioning]);
+
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+  };
 
   return (
-    <section className="blog-preview" id="blog">
+    <section
+      className="blog-slider-section"
+      id="blog"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div className="container">
-        <div className="blog-head">
-          <div className="blog-head-text">
+        {/* Header Grid */}
+        <div className="blog-slider-head">
+          <div className="blog-slider-left">
             <Reveal as="p" className="eyebrow">
-              Our Blog
+              Insights &amp; Guides
               <span className="eyebrow-rule" aria-hidden="true" />
             </Reveal>
-            <Reveal as="h2" className="blog-heading" delay={0.05}>
-              Insights From Our Experts
+            <Reveal as="h2" delay={0.05}>
+              Madhavam Realty Blog
             </Reveal>
-            <Reveal as="p" className="blog-sub" delay={0.1}>
-              Guides, market trends, and tips to help you make smarter real
-              estate decisions in Kolkata.
-            </Reveal>
+
+            {/* Category Filter Pills */}
+            <div className="blog-slider-filters">
+              {['All', 'Buying Guide', 'Market Trends', 'Investment'].map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={`blog-filter-btn${selectedFilter === filter ? ' is-active' : ''}`}
+                  onClick={() => handleFilterChange(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
           </div>
-          <Reveal className="blog-head-cta" delay={0.12}>
-            <Link to="/blog" className="blog-viewall">
-              View All Articles
-              <LuArrowRight aria-hidden="true" />
-            </Link>
-          </Reveal>
+
+          <div className="blog-slider-right">
+            <p className="blog-slider-right-sub">
+              Every article is crafted to bring you closer to making transparent,
+              informed real estate decisions in Kolkata. Get inspired. Get informed. Get involved.
+            </p>
+          </div>
         </div>
 
-        <div className="blog-grid">
-          <Reveal className="blog-featured" y={32}>
-            <Link to="/blog" className="blog-card blog-card--featured">
-              <Media post={featured} />
-              <div className="blog-card-body">
-                <Meta post={featured} />
-                <h3 className="blog-card-title">{featured.title}</h3>
-                <p className="blog-card-excerpt">{featured.excerpt}</p>
-                <span className="blog-card-link">
-                  Read Article
-                  <LuArrowRight aria-hidden="true" />
-                </span>
-              </div>
-            </Link>
-          </Reveal>
-
-          <div className="blog-list">
-            {rest.map((post, i) => (
-              <Reveal
-                className="blog-rowitem"
-                delay={0.1 + i * 0.1}
-                y={24}
-                key={post.title}
+        {/* Horizontal Card Slider Container */}
+        {filteredPosts.length > 0 && (
+          <div className="blog-slider-container">
+            <div className="blog-slider-viewport">
+              <div
+                className="blog-slider-track"
+                style={{
+                  transform: `translateX(var(--bs-translate))`,
+                  transition: isTransitioning ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                  '--bs-translate': `calc(-${active} * var(--bs-slide-width-with-gap))`
+                }}
               >
-                <Link to="/blog" className="blog-card blog-card--row">
-                  <Media post={post} />
-                  <div className="blog-card-body">
-                    <Meta post={post} />
-                    <h3 className="blog-card-title">{post.title}</h3>
-                    <p className="blog-card-excerpt">{post.excerpt}</p>
-                    <span className="blog-card-link">
-                      Read More
-                      <LuArrowRight aria-hidden="true" />
-                    </span>
+                {displayPosts.map((post, idx) => (
+                  <div key={`${post.id}-${idx}`} className="blog-slider-card-wrap">
+                    <Link to="/blog" className="blog-slider-card">
+                      <div className="blog-slider-image-box">
+                        <img src={post.image} alt={post.title} loading="lazy" />
+                      </div>
+                      <div className="blog-slider-card-content">
+                        <div className="blog-slider-card-meta-row">
+                          <span className="blog-slider-card-tag">{post.tag}</span>
+                          <span className="blog-slider-card-date">{post.date} · {post.read}</span>
+                        </div>
+                        <h3 className="blog-slider-card-title">{post.title}</h3>
+                        <p className="blog-slider-card-desc">{post.excerpt}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </Reveal>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Centered Left & Right Navigation Controls below the track */}
+            <div className="blog-slider-controls">
+              <button
+                type="button"
+                className="blog-slider-control-btn"
+                onClick={handlePrev}
+                aria-label="Previous slide"
+              >
+                <LuChevronLeft aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="blog-slider-control-btn"
+                onClick={handleNext}
+                aria-label="Next slide"
+              >
+                <LuChevronRight aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

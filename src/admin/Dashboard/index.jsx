@@ -33,40 +33,40 @@ export default function AdminDashboard() {
 
         {/* Metrics Grid */}
         <div className="admin-metrics-grid">
-          <div className="metric-card">
+          <div className="metric-card leads-card">
             <span className="metric-card-title">Total Leads</span>
             <div className="metric-card-value">{activeLeadsCount}</div>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--success)' }}>&bull; All customer enquiries</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--admin-accent-gold)' }}>&bull; All customer enquiries</p>
           </div>
-          <div className="metric-card">
+          <div className="metric-card new-card">
             <span className="metric-card-title">New Inquiries</span>
             <div className="metric-card-value">{newLeads}</div>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--warning)' }}>&bull; Awaiting callback response</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--admin-warning)' }}>&bull; Awaiting callback response</p>
           </div>
-          <div className="metric-card">
+          <div className="metric-card projects-card">
             <span className="metric-card-title">Active Projects</span>
             <div className="metric-card-value">{projectsCount}</div>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--primary)' }}>&bull; Real estate properties catalog</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--admin-success)' }}>&bull; Real estate properties catalog</p>
           </div>
         </div>
 
         {/* Analytics Charts */}
-        <div className="glass-card" style={{ padding: '30px', backgroundColor: 'white' }}>
-          <h3 style={{ marginBottom: '20px' }}>Lead Acquisition Trend (2026)</h3>
+        <div className="glass-card" style={{ padding: '30px' }}>
+          <h3 style={{ marginBottom: '20px', color: 'var(--admin-text-primary)', fontFamily: 'var(--font-serif)' }}>Lead Acquisition Trend (2026)</h3>
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
               <AreaChart data={ANALYTICS_DATA} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="var(--admin-accent-gold)" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="var(--admin-accent-gold)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Area type="monotone" dataKey="Leads" stroke="var(--primary)" fillOpacity={1} fill="url(#colorLeads)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.08)" />
+                <XAxis dataKey="name" stroke="var(--admin-text-secondary)" tick={{ fill: 'var(--admin-text-secondary)', fontSize: 12 }} />
+                <YAxis stroke="var(--admin-text-secondary)" tick={{ fill: 'var(--admin-text-secondary)', fontSize: 12 }} />
+                <Tooltip contentStyle={{ backgroundColor: '#121520', borderColor: 'var(--admin-border)', color: 'var(--admin-text-primary)' }} />
+                <Area type="monotone" dataKey="Leads" stroke="var(--admin-accent-gold)" fillOpacity={1} fill="url(#colorLeads)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

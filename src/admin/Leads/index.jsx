@@ -38,7 +38,7 @@ export default function AdminLeads() {
     lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lead.phone.includes(searchTerm) ||
-    (lead.project && lead.project.toLowerCase().includes(searchTerm.toLowerCase()))
+    (lead.interest && lead.interest.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -53,34 +53,31 @@ export default function AdminLeads() {
             <h2>Customer Enquiries / Leads</h2>
             <p style={{ color: 'var(--neutral-600)', fontSize: 'var(--text-sm)' }}>Manage incoming site visit bookings and land leasing requests.</p>
           </div>
-          <button onClick={handleExport} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px' }}>
+          <button onClick={handleExport} className="btn-admin-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FiDownload /> Export CSV
           </button>
         </div>
 
         {/* Filters */}
         <div style={{ position: 'relative', maxWidth: '400px' }}>
-          <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--neutral-600)' }} />
+          <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--admin-text-secondary)' }} />
           <input 
             type="text" 
             placeholder="Search leads by name, email, phone or project..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="admin-input"
             style={{
-              width: '100%',
-              padding: '12px 16px 12px 45px',
-              border: '1px solid var(--neutral-400)',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'white'
+              paddingLeft: '45px'
             }}
           />
         </div>
 
         {/* Lead Table Container */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>Loading inquiries...</div>
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-secondary)' }}>Loading inquiries...</div>
         ) : filteredLeads.length === 0 ? (
-          <div className="glass-card" style={{ padding: '50px', textAlign: 'center', backgroundColor: 'white' }}>
+          <div className="glass-card" style={{ padding: '50px', textAlign: 'center' }}>
             No leads found.
           </div>
         ) : (
@@ -103,25 +100,24 @@ export default function AdminLeads() {
                     <td>
                       <strong>{lead.name}</strong>
                     </td>
-                    <td>
+                    <td style={{ color: 'var(--admin-text-secondary)' }}>
                       <div>{lead.phone}</div>
-                      <div style={{ color: 'var(--neutral-600)', fontSize: 'var(--text-xs)' }}>{lead.email}</div>
+                      <div style={{ opacity: 0.7, fontSize: 'var(--text-xs)' }}>{lead.email}</div>
                     </td>
                     <td>
-                      <span className="badge" style={{ backgroundColor: 'var(--neutral-300)', color: 'var(--secondary)' }}>
-                        {lead.project || 'General'}
+                      <span className="badge badge-info">
+                        {lead.interest || 'General'}
                       </span>
                     </td>
                     <td>
                       <select 
                         value={lead.status} 
                         onChange={(e) => handleStatusChange(lead.id, e.target.value)}
+                        className="admin-select"
                         style={{
                           padding: '6px 12px',
-                          border: '1px solid var(--neutral-400)',
-                          borderRadius: 'var(--radius-sm)',
-                          backgroundColor: 'white',
-                          fontSize: 'var(--text-sm)'
+                          width: 'auto',
+                          fontSize: 'var(--text-xs)'
                         }}
                       >
                         <option value="New">New</option>
@@ -133,7 +129,7 @@ export default function AdminLeads() {
                     <td>
                       <button 
                         onClick={() => handleDelete(lead.id)} 
-                        style={{ color: 'var(--error)', cursor: 'pointer', padding: '8px' }}
+                        style={{ color: 'var(--admin-error)', cursor: 'pointer', padding: '8px', background: 'none', border: 'none' }}
                         title="Delete Lead"
                       >
                         <FiTrash2 size={16} />

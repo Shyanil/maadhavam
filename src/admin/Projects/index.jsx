@@ -69,8 +69,7 @@ export default function AdminProjects() {
           </div>
           <button 
             onClick={() => setShowAddForm(!showAddForm)} 
-            className="btn btn-primary"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            className="btn-admin-primary"
           >
             <FiPlus /> {showAddForm ? 'Close Form' : 'Add Property'}
           </button>
@@ -78,15 +77,15 @@ export default function AdminProjects() {
 
         {/* Add Form Panel */}
         {showAddForm && (
-          <form onSubmit={handleSubmit} className="glass-card" style={{ padding: '30px', backgroundColor: 'white', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <form onSubmit={handleSubmit} className="glass-card" style={{ padding: '30px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Property Title</label>
-              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Madhavam Gold Meadows" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Property Title</label>
+              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Madhavam Gold Meadows" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Property Type</label>
-              <select value={type} onChange={(e) => setType(e.target.value)} style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)', backgroundColor: 'white' }}>
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Property Type</label>
+              <select value={type} onChange={(e) => setType(e.target.value)} className="admin-select">
                 <option value="Residential Villa">Residential Villa</option>
                 <option value="Plots & Land">Plots & Land</option>
                 <option value="Luxury Apartment">Luxury Apartment</option>
@@ -95,31 +94,31 @@ export default function AdminProjects() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Location</label>
-              <input type="text" required value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. City Centre, Gwalior" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Location</label>
+              <input type="text" required value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. City Centre, Gwalior" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Price (INR / Display label)</label>
-              <input type="text" required value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. ₹50 Lakhs - 1.2 Cr" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Price (INR / Display label)</label>
+              <input type="text" required value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. ₹50 Lakhs - 1.2 Cr" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Area Range</label>
-              <input type="text" required value={area} onChange={(e) => setArea(e.target.value)} placeholder="e.g. 1200 - 2400 Sq.Ft." style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Area Range</label>
+              <input type="text" required value={area} onChange={(e) => setArea(e.target.value)} placeholder="e.g. 1200 - 2400 Sq.Ft." className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Image URL</label>
-              <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Image URL</label>
+              <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', gridColumn: 'span 2' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600' }}>Description</label>
-              <textarea required rows="3" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Property highlights, layouts, structural specifications details..." style={{ padding: '10px', border: '1px solid var(--neutral-400)', borderRadius: 'var(--radius-sm)' }} />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Description</label>
+              <textarea required rows="3" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Property highlights, layouts, structural specifications details..." className="admin-textarea" />
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ gridColumn: 'span 2', borderRadius: 'var(--radius-sm)' }}>
+            <button type="submit" className="btn-admin-primary" style={{ gridColumn: 'span 2' }}>
               Add Property Listing
             </button>
           </form>
@@ -127,7 +126,7 @@ export default function AdminProjects() {
 
         {/* Listings Table */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}>Loading properties...</div>
+          <div style={{ textAlign: 'center', padding: '40px', color: 'var(--admin-text-secondary)' }}>Loading properties...</div>
         ) : (
           <div className="admin-table-container">
             <table className="admin-table">
@@ -158,7 +157,7 @@ export default function AdminProjects() {
                     <td>
                       <button 
                         onClick={() => handleDelete(project.id)} 
-                        style={{ color: 'var(--error)', cursor: 'pointer', padding: '8px' }}
+                        style={{ color: 'var(--admin-error)', cursor: 'pointer', padding: '8px', background: 'none', border: 'none' }}
                         title="Delete Property"
                       >
                         <FiTrash2 size={16} />
