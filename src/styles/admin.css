@@ -32,6 +32,41 @@
   overflow-x: hidden;
 }
 
+.admin-container.admin-theme-light {
+  --admin-bg: #f5f1e9;
+  --admin-sidebar-bg: rgba(255, 255, 255, 0.86);
+  --admin-card-bg: rgba(255, 255, 255, 0.78);
+  --admin-card-hover-bg: rgba(255, 255, 255, 0.95);
+  --admin-border: rgba(86, 65, 38, 0.16);
+  --admin-border-hover: rgba(139, 30, 30, 0.28);
+  --admin-text-primary: #251f1b;
+  --admin-text-secondary: #6d6257;
+  --admin-input-bg: rgba(255, 255, 255, 0.74);
+  --admin-accent-gold: #9b7435;
+  --admin-accent-gold-glow: rgba(155, 116, 53, 0.18);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(139, 30, 30, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(198, 161, 91, 0.18) 0px, transparent 50%);
+}
+
+.admin-container.admin-theme-light .admin-logo,
+.admin-container.admin-theme-light .admin-nav-item.active {
+  text-shadow: none;
+}
+
+.admin-container.admin-theme-light .admin-table th {
+  background-color: rgba(139, 30, 30, 0.04);
+}
+
+.admin-container.admin-theme-light .admin-table tr:hover td {
+  background-color: rgba(139, 30, 30, 0.035);
+}
+
+.admin-container.admin-theme-light .admin-select option {
+  background-color: #ffffff;
+  color: var(--admin-text-primary);
+}
+
 /* Sidebar Navigation */
 .admin-sidebar {
   width: var(--sidebar-width);
@@ -275,6 +310,26 @@
   outline: none !important;
   box-shadow: 0 0 0 3px var(--admin-accent-gold-glow) !important;
   background-color: rgba(22, 26, 43, 0.9) !important;
+}
+
+.admin-search-field {
+  position: relative;
+  max-width: 430px;
+  width: 100%;
+}
+
+.admin-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--admin-text-secondary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.admin-search-input {
+  padding-left: 48px !important;
 }
 
 .admin-select option {

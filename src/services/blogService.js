@@ -1,9 +1,15 @@
 import { supabase } from './supabase';
 
 const isMockEnabled = () => {
-  return import.meta.env.VITE_SUPABASE_URL === undefined ||
-    import.meta.env.VITE_SUPABASE_URL.includes('placeholder-url');
+  return false;
 };
+
+const createSlug = (title) =>
+  title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 
 const MOCK_BLOGS = [
   {
@@ -84,9 +90,15 @@ export const blogService = {
       return { data: newBlog, error: null };
     }
 
+    const payload = {
+      slug: createSlug(blogData.title),
+      published_at: new Date().toISOString(),
+      ...blogData,
+    };
+
     const { data, error } = await supabase
       .from('blogs')
-      .insert([blogData])
+      .insert([payload])
       .select();
     return { data: data ? data[0] : null, error };
   },

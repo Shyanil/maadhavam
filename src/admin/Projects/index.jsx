@@ -3,45 +3,59 @@ import { useProjects } from '../../hooks/useProjects';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2 } from 'react-icons/fi';
 import SEO from '../../components/SEO';
+import { uploadAdminImage } from '../../services/supabase';
 
 export default function AdminProjects() {
   const { projects, loading, createProject, deleteProject } = useProjects();
   const [showAddForm, setShowAddForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('Residential Villa');
+  const [tag, setTag] = useState('');
+  const [type, setType] = useState('Residential');
   const [location, setLocation] = useState('');
-  const [price, setPrice] = useState('');
-  const [area, setArea] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
+  const [featured, setFeatured] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setSubmitting(true);
+    const { data: imageUrl, error: imageError } = await uploadAdminImage(
+      'project-images',
+      imageFile,
+      'projects'
+    );
+
+    if (imageError) {
+      toast.error(imageError.message || 'Failed to upload project image');
+      setSubmitting(false);
+      return;
+    }
+
     const projectData = {
-      title,
+      title: title.trim(),
+      tag: tag.trim(),
+      image_url: imageUrl,
+      location: location.trim(),
       type,
-      location,
-      price,
-      area,
-      description,
-      image: image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800',
-      features: ['24/7 Security', 'Water Supply', 'Road Connectivity'],
+      featured,
     };
 
-    const { success } = await createProject(projectData);
+    const { success, error } = await createProject(projectData);
     if (success) {
       toast.success('Project added successfully!');
       setTitle('');
+      setTag('');
       setLocation('');
-      setPrice('');
-      setArea('');
-      setDescription('');
-      setImage('');
+      setFeatured(false);
+      setImageFile(null);
+      e.target.reset();
       setShowAddForm(false);
     } else {
-      toast.error('Failed to create project');
+      toast.error(error?.message || 'Failed to create project');
     }
+    setSubmitting(false);
   };
 
   const handleDelete = async (id) => {
@@ -84,42 +98,46 @@ export default function AdminProjects() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Project Tag</label>
+              <input type="text" required value={tag} onChange={(e) => setTag(e.target.value)} placeholder="e.g. Premium Apartments" className="admin-input" />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Property Type</label>
               <select value={type} onChange={(e) => setType(e.target.value)} className="admin-select">
-                <option value="Residential Villa">Residential Villa</option>
-                <option value="Plots & Land">Plots & Land</option>
-                <option value="Luxury Apartment">Luxury Apartment</option>
-                <option value="Commercial Space">Commercial Space</option>
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Land">Land</option>
+                <option value="Leasing">Leasing</option>
               </select>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Location</label>
-              <input type="text" required value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. City Centre, Gwalior" className="admin-input" />
+              <input type="text" required value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. New Town, Kolkata" className="admin-input" />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Price (INR / Display label)</label>
-              <input type="text" required value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. ₹50 Lakhs - 1.2 Cr" className="admin-input" />
+              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Project Image</label>
+              <input type="file" required accept="image/webp" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="admin-input" />
+              <span style={{ color: 'var(--admin-text-secondary)', fontSize: 'var(--text-xs)' }}>WebP only. Maximum 200 KB.</span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Area Range</label>
-              <input type="text" required value={area} onChange={(e) => setArea(e.target.value)} placeholder="e.g. 1200 - 2400 Sq.Ft." className="admin-input" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <input
+                id="project-featured"
+                type="checkbox"
+                checked={featured}
+                onChange={(e) => setFeatured(e.target.checked)}
+                style={{ width: '16px', height: '16px', accentColor: 'var(--admin-accent-gold)' }}
+              />
+              <label htmlFor="project-featured" style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>
+                Show as featured project
+              </label>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Image URL</label>
-              <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" className="admin-input" />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', gridColumn: 'span 2' }}>
-              <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Description</label>
-              <textarea required rows="3" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Property highlights, layouts, structural specifications details..." className="admin-textarea" />
-            </div>
-
-            <button type="submit" className="btn-admin-primary" style={{ gridColumn: 'span 2' }}>
-              Add Property Listing
+            <button type="submit" disabled={submitting} className="btn-admin-primary" style={{ gridColumn: 'span 2' }}>
+              {submitting ? 'Uploading...' : 'Add Project'}
             </button>
           </form>
         )}
@@ -134,10 +152,10 @@ export default function AdminProjects() {
                 <tr>
                   <th>Image</th>
                   <th>Title</th>
+                  <th>Tag</th>
                   <th>Type</th>
                   <th>Location</th>
-                  <th>Price</th>
-                  <th>Area</th>
+                  <th>Featured</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -145,15 +163,15 @@ export default function AdminProjects() {
                 {projects.map((project) => (
                   <tr key={project.id}>
                     <td>
-                      <img src={project.image} alt={project.title} style={{ width: '60px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
+                      <img src={project.image_url} alt={project.title} style={{ width: '60px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
                     </td>
                     <td>
                       <strong>{project.title}</strong>
                     </td>
+                    <td>{project.tag}</td>
                     <td>{project.type}</td>
                     <td>{project.location}</td>
-                    <td>{project.price}</td>
-                    <td>{project.area}</td>
+                    <td>{project.featured ? 'Yes' : 'No'}</td>
                     <td>
                       <button 
                         onClick={() => handleDelete(project.id)} 

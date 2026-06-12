@@ -31,7 +31,6 @@ import AdminDashboard from '../admin/Dashboard';
 import AdminLeads from '../admin/Leads';
 import AdminProjects from '../admin/Projects';
 import AdminBlog from '../admin/Blog';
-import AdminSettings from '../admin/Settings';
 import AdminAnalytics from '../admin/Analytics';
 
 import { ROUTES } from '../utils/constants';
@@ -63,7 +62,6 @@ export default function AppRoutes() {
         <Route path={ROUTES.ADMIN_LEADS} element={<AdminLeads />} />
         <Route path={ROUTES.ADMIN_PROJECTS} element={<AdminProjects />} />
         <Route path={ROUTES.ADMIN_BLOG} element={<AdminBlog />} />
-        <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
         <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
       </Route>
 

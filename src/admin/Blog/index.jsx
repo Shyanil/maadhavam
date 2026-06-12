@@ -3,17 +3,19 @@ import { blogService } from '../../services/blogService';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2 } from 'react-icons/fi';
 import SEO from '../../components/SEO';
+import { uploadAdminImage } from '../../services/supabase';
 
 export default function AdminBlog() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('Admin');
-  const [image, setImage] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -28,27 +30,44 @@ export default function AdminBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+
+    const { data: imageUrl, error: imageError } = await uploadAdminImage(
+      'blog-images',
+      imageFile,
+      'blogs'
+    );
+
+    if (imageError) {
+      toast.error(imageError.message || 'Failed to upload blog image');
+      setSubmitting(false);
+      return;
+    }
+
     const blogData = {
-      title,
-      excerpt,
-      content,
-      author,
-      image: image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+      title: title.trim(),
+      excerpt: excerpt.trim(),
+      content: content.trim(),
+      author: author.trim() || 'Admin',
+      image: imageUrl,
       tags: ['News', 'Gwalior'],
     };
 
-    const { success } = await blogService.createBlog(blogData);
-    if (success) {
+    const { error } = await blogService.createBlog(blogData);
+    if (!error) {
       toast.success('Blog post created successfully!');
       setTitle('');
       setExcerpt('');
       setContent('');
-      setImage('');
+      setAuthor('Admin');
+      setImageFile(null);
+      e.target.reset();
       setShowAddForm(false);
       fetchBlogs();
     } else {
-      toast.error('Failed to create blog post');
+      toast.error(error.message || 'Failed to create blog post');
     }
+    setSubmitting(false);
   };
 
   const handleDelete = async (id) => {
@@ -96,14 +115,15 @@ export default function AdminBlog() {
               <input type="text" required value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Brief summary of the article..." className="admin-input" />
             </div>
 
-            <div style={{ display: 'flex', gap: '20px' }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
                 <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Author Name</label>
                 <input type="text" required value={author} onChange={(e) => setAuthor(e.target.value)} className="admin-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Image URL</label>
-                <input type="url" value={image} onChange={(e) => setImage(e.target.value)} placeholder="Unsplash image URL" className="admin-input" />
+                <label style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--admin-text-primary)' }}>Cover Image</label>
+                <input type="file" required accept="image/webp" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="admin-input" />
+                <span style={{ color: 'var(--admin-text-secondary)', fontSize: 'var(--text-xs)' }}>WebP only. Maximum 200 KB.</span>
               </div>
             </div>
 
@@ -112,8 +132,8 @@ export default function AdminBlog() {
               <textarea required rows="8" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Detailed paragraphs content here..." className="admin-textarea" />
             </div>
 
-            <button type="submit" className="btn-admin-primary">
-              Publish Blog Post
+            <button type="submit" disabled={submitting} className="btn-admin-primary">
+              {submitting ? 'Uploading...' : 'Publish Blog Post'}
             </button>
           </form>
         )}

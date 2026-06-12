@@ -20,7 +20,7 @@ export const leadService = {
       const newLead = {
         id: crypto.randomUUID(),
         created_at: new Date().toISOString(),
-        status: 'New',
+        status: 'new',
         ...leadData,
       };
       leads.push(newLead);

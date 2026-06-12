@@ -59,17 +59,14 @@ export default function AdminLeads() {
         </div>
 
         {/* Filters */}
-        <div style={{ position: 'relative', maxWidth: '400px' }}>
-          <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--admin-text-secondary)' }} />
+        <div className="admin-search-field">
+          <FiSearch className="admin-search-icon" aria-hidden="true" />
           <input 
             type="text" 
             placeholder="Search leads by name, email, phone or project..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="admin-input"
-            style={{
-              paddingLeft: '45px'
-            }}
+            className="admin-input admin-search-input"
           />
         </div>
 
@@ -111,7 +108,7 @@ export default function AdminLeads() {
                     </td>
                     <td>
                       <select 
-                        value={lead.status} 
+                        value={lead.status || 'new'}
                         onChange={(e) => handleStatusChange(lead.id, e.target.value)}
                         className="admin-select"
                         style={{
@@ -120,10 +117,11 @@ export default function AdminLeads() {
                           fontSize: 'var(--text-xs)'
                         }}
                       >
-                        <option value="New">New</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="Closed">Closed</option>
-                        <option value="Lost">Lost</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="qualified">Qualified</option>
+                        <option value="lost">Lost</option>
+                        <option value="closed">Closed</option>
                       </select>
                     </td>
                     <td>

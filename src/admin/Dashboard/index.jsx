@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
   const activeLeadsCount = leads.length;
   const projectsCount = projects.length;
-  const newLeads = leads.filter(l => l.status === 'New').length;
+  const newLeads = leads.filter(l => l.status === 'new').length;
 
   return (
     <>

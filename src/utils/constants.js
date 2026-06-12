@@ -16,7 +16,6 @@ export const ROUTES = {
   ADMIN_LEADS: '/admin/leads',
   ADMIN_PROJECTS: '/admin/projects',
   ADMIN_BLOG: '/admin/blog',
-  ADMIN_SETTINGS: '/admin/settings',
   ADMIN_ANALYTICS: '/admin/analytics',
 };
 

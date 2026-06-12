@@ -1,19 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { FiLayout, FiMail, FiLayers, FiFileText, FiTrendingUp, FiSettings, FiLogOut, FiHome } from 'react-icons/fi';
+import { FiLayout, FiMail, FiLayers, FiFileText, FiTrendingUp, FiLogOut, FiHome, FiMoon, FiSun } from 'react-icons/fi';
 import { ROUTES } from '../utils/constants';
 import '../styles/admin.css';
 
 export default function AdminLayout() {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
+  const [theme, setTheme] = useState(() => localStorage.getItem('madhavam_admin_theme') || 'dark');
 
   useEffect(() => {
     if (!loading && !user) {
       navigate(ROUTES.ADMIN_LOGIN);
     }
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    localStorage.setItem('madhavam_admin_theme', theme);
+  }, [theme]);
 
   const handleLogout = async () => {
     const { success } = await logout();
@@ -33,7 +38,7 @@ export default function AdminLayout() {
   if (!user) return null;
 
   return (
-    <div className="admin-container">
+    <div className={`admin-container admin-theme-${theme}`}>
       
       {/* Sidebar Navigation */}
       <aside className="admin-sidebar">
@@ -55,12 +60,18 @@ export default function AdminLayout() {
           <NavLink to={ROUTES.ADMIN_ANALYTICS} className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
             <FiTrendingUp /> Analytics
           </NavLink>
-          <NavLink to={ROUTES.ADMIN_SETTINGS} className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            <FiSettings /> Settings
-          </NavLink>
         </nav>
 
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <button
+            type="button"
+            onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+            className="admin-nav-item"
+            style={{ border: 'none', background: 'none', width: '100%', cursor: 'pointer', textAlign: 'left' }}
+          >
+            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <Link to="/" className="admin-nav-item" style={{ color: 'var(--accent-gold)' }}>
             <FiHome /> Public Site
           </Link>
