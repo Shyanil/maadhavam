@@ -15,24 +15,31 @@ const saveLocalLeads = (leads) => {
 
 export const leadService = {
   async submitLead(leadData) {
+    const payload = {
+      name: leadData.name?.trim(),
+      email: leadData.email?.trim(),
+      phone: leadData.phone?.trim(),
+      interest: leadData.interest || leadData.project || 'General',
+      status: 'new',
+      notes: leadData.notes || null,
+    };
+
     if (isMockEnabled()) {
       const leads = getLocalLeads();
       const newLead = {
         id: crypto.randomUUID(),
         created_at: new Date().toISOString(),
-        status: 'new',
-        ...leadData,
+        ...payload,
       };
       leads.push(newLead);
       saveLocalLeads(leads);
       return { data: newLead, error: null };
     }
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('leads')
-      .insert([leadData])
-      .select();
-    return { data: data ? data[0] : null, error };
+      .insert([payload]);
+    return { data: error ? null : payload, error };
   },
 
   async getAllLeads() {

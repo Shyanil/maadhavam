@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { leadService } from '../services/leadService';
 
-export function useLeads() {
+export function useLeads({ autoFetch = true } = {}) {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -68,8 +68,10 @@ export function useLeads() {
   };
 
   useEffect(() => {
-    fetchLeads();
-  }, [fetchLeads]);
+    if (autoFetch) {
+      fetchLeads();
+    }
+  }, [autoFetch, fetchLeads]);
 
   return {
     leads,

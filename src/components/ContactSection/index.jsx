@@ -11,6 +11,7 @@ import {
 } from 'react-icons/lu';
 import Reveal from '../Reveal';
 import { CONTACT_INFO } from '../../utils/constants';
+import { useLeads } from '../../hooks/useLeads';
 
 const PROJECT_OPTIONS = ['Residential', 'Commercial', 'Land', 'Leasing', 'Other'];
 const EMPTY = { name: '', phone: '', email: '', interest: '' };
@@ -18,19 +19,25 @@ const EMPTY = { name: '', phone: '', email: '', interest: '' };
 export default function ContactSection() {
   const [form, setForm] = useState(EMPTY);
   const [submitting, setSubmitting] = useState(false);
+  const { submitLead } = useLeads({ autoFetch: false });
 
   const update = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    // Backend not wired yet — acknowledge and reset.
-    setTimeout(() => {
+
+    const { success, error } = await submitLead(form);
+
+    if (success) {
       toast.success("Thank you! We'll get back to you shortly.");
       setForm(EMPTY);
-      setSubmitting(false);
-    }, 600);
+    } else {
+      toast.error(error?.message || 'Failed to submit enquiry. Please try again.');
+    }
+
+    setSubmitting(false);
   };
 
   const telHref = `tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`;

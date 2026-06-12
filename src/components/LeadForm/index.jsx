@@ -5,14 +5,14 @@ import toast from 'react-hot-toast';
 
 export default function LeadForm({ projectName }) {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const { submitLead, loading } = useLeads();
+  const { submitLead, loading } = useLeads({ autoFetch: false });
 
   const onSubmit = async (data) => {
     const leadData = {
       name: data.name,
       email: data.email,
       phone: data.phone,
-      project: projectName || 'General Enquiry',
+      interest: projectName || 'General Enquiry',
     };
 
     const { success, error } = await submitLead(leadData);
