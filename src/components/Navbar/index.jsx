@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { NAVIGATION_ITEMS } from '../../utils/constants';
 import logo from '../../assets/maadhavam_removebg_logo.png';
@@ -9,15 +9,18 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
+  useEffect(() => {
+    document.body.classList.toggle('site-menu-lock', menuOpen);
+    return () => document.body.classList.remove('site-menu-lock');
+  }, [menuOpen]);
+
   return (
-    <header className="site-header">
+    <header className={`site-header${menuOpen ? ' menu-open' : ''}`}>
       <div className="container site-header-inner">
-        {/* Logo */}
         <Link to="/" className="site-logo" onClick={closeMenu}>
           <img src={logo} alt="Madhavam Realty Logo" />
         </Link>
 
-        {/* Hamburger toggle (mobile only) */}
         <button
           type="button"
           className="site-nav-toggle"
@@ -27,17 +30,20 @@ export default function Navbar() {
         >
           {menuOpen ? <LuX /> : <LuMenu />}
         </button>
+      </div>
 
-        {/* Nav + socials: inline on desktop, dropdown panel on mobile */}
-        <div className={`site-nav-group${menuOpen ? ' open' : ''}`}>
+      <div className={`site-menu-panel${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
+        <div className="container site-menu-inner">
+          <p className="site-menu-kicker">Menu</p>
           <nav className="site-nav">
-            {NAVIGATION_ITEMS.map((item) => (
+            {NAVIGATION_ITEMS.map((item, index) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className="site-navlink"
                 onClick={closeMenu}
               >
+                <span>{String(index + 1).padStart(2, '0')}</span>
                 {item.label}
               </NavLink>
             ))}

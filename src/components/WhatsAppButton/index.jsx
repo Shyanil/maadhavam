@@ -11,9 +11,10 @@ export default function WhatsAppButton() {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      className="whatsapp-fab"
       style={{
         position: 'fixed',
-        bottom: '30px',
+        bottom: '14px',
         right: '30px',
         backgroundColor: '#25D366',
         color: 'white',

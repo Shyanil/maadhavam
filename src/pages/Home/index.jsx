@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiArrowDown } from 'react-icons/fi';
 import {
   LuUserCheck,
   LuMapPin,
@@ -14,12 +13,12 @@ import {
   LuCalendarCheck,
 } from 'react-icons/lu';
 import SEO from '../../components/SEO';
+import HomeHero from '../../components/HomeHero';
 import FeaturedProjects from '../../components/FeaturedProjects';
 import PropertyServices from '../../components/PropertyServices';
 import Testimonials from '../../components/Testimonials';
 import Awards from '../../components/Awards';
 import { CONTACT_INFO } from '../../utils/constants';
-import heroImage from '../../assets/hero_image_2.webp';
 import aboutUsImage from '../../assets/about_us.webp';
 import edenImg from '../../assets/eden_devprayag.webp';
 import vinayakImg from '../../assets/vinayak_21_acre.webp';
@@ -93,64 +92,12 @@ export default function Home() {
   const whatsappText = encodeURIComponent('Hello Madhavam Realty, I would like to book a property consultation.');
   const whatsappHref = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${whatsappText}`;
 
-  const scrollToContent = () => {
-    window.scrollTo({
-      top: window.innerHeight * 0.9,
-      behavior: 'smooth',
-    });
-  };
-
   return (
     <>
       <SEO pageKey="home" />
 
-      {/* Hero Section — full-bleed house photo with overlaid content */}
-      <section className="replicate-hero">
-        {/* House photo as a full background, anchored bottom-right */}
-        <img
-          src={heroImage}
-          alt="Modern home with a charcoal standing-seam metal roof"
-          className="replicate-hero-bg"
-          draggable="false"
-          fetchPriority="high"
-        />
-        {/* Cream wash keeps the left-hand text legible */}
-        <div className="replicate-hero-overlay" aria-hidden="true" />
-
-        <div className="container replicate-hero-container animate-fade-in">
-          {/* Left Text Column */}
-          <div className="replicate-hero-text-col">
-            <h1 className="replicate-hero-heading">
-              Find Your Perfect Property{' '}
-              <br className="hero-line-break" />
-              in Kolkata&rsquo;s Most{' '}
-              <br className="hero-line-break" />
-              Promising Locations
-            </h1>
-            <p className="replicate-hero-subtext">
-              Expert guidance for residential and commercial properties across New Town, Rajarhat, Howrah, and Hooghly.
-            </p>
-            <div className="replicate-hero-buttons">
-              <Link to="/contact" className="replicate-hero-btn-primary">
-                Contact Us
-              </Link>
-              <Link to="/about" className="replicate-hero-btn-outline">
-                About Us
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Circular scroll-down indicator */}
-        <button
-          type="button"
-          className="replicate-hero-circle-btn"
-          onClick={scrollToContent}
-          aria-label="Scroll down to view more"
-        >
-          <FiArrowDown aria-hidden="true" />
-        </button>
-      </section>
+      {/* Hero Section — luxury editorial slider + glass search panel */}
+      <HomeHero />
 
       {/* Why Choose Section — same cream / maroon / gold palette as the hero */}
       <section className="why-choose" id="why-choose">
