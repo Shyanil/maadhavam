@@ -183,7 +183,7 @@ export default function PropertyServices() {
         <div className="services-actions">
           <a href={telHref} className="services-btn-primary">
             <LuPhone aria-hidden="true" />
-            Call Us
+            Contact Us
           </a>
           <Link to="/land-leasing" className="services-btn-outline">
             View More Services

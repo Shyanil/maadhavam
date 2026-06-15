@@ -141,13 +141,18 @@ export default function HomeHero() {
           </div>
 
           <p className="hh-subtext">
-            Residential, commercial, and investment advisory for Kolkata&rsquo;s key growth locations.
+            Beyond Properties, We Build Trust &mdash; Your Reliable Partner in Every Real Estate Decision.
           </p>
 
-          <Link to="/projects" className="hh-view-more">
-            View More
-            <LuArrowRight aria-hidden="true" />
-          </Link>
+          <div className="hh-actions">
+            <Link to="/projects" className="hh-view-more">
+              View Properties
+              <LuArrowRight aria-hidden="true" />
+            </Link>
+            <Link to="/contact" className="hh-view-more hh-view-more--outline">
+              Contact Us
+            </Link>
+          </div>
         </div>
       </div>
 

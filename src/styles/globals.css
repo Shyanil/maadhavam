@@ -3127,16 +3127,22 @@ button, input, textarea, select {
   margin: 20px 0 0;
 }
 
+.hh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
 .hh-view-more {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-top: 28px;
   padding: 16px 36px;
   border-radius: 0;
   color: #fff;
-  background: transparent;
+  background: #8B1E1E;
   border: 1px solid #8B1E1E;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
@@ -3147,6 +3153,19 @@ button, input, textarea, select {
 }
 
 .hh-view-more:visited {
+  color: #fff;
+}
+
+/* Secondary actions sit beside the primary CTA as outline buttons. */
+.hh-view-more--outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.hh-view-more--outline:hover,
+.hh-view-more--outline:active {
+  background-color: #8B1E1E;
+  border-color: #8B1E1E;
   color: #fff;
 }
 
@@ -3438,8 +3457,11 @@ button, input, textarea, select {
     line-height: 1.6;
     max-width: 300px;
   }
-  .hh-view-more {
+  .hh-actions {
     margin-top: 22px;
+    gap: 10px;
+  }
+  .hh-view-more {
     padding: 14px 24px;
     font-size: 12px;
   }
