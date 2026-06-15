@@ -118,6 +118,9 @@ export default function FeaturedProjects() {
             <h2 className="featured-heading">
               Signature developments, crafted to last
             </h2>
+            <p className="featured-subtext">
+              Your Dream Property, Our Trusted Commitment &mdash; Building Relationships Beyond Bricks.
+            </p>
           </div>
 
           {/* Navigation arrows */}
@@ -229,6 +232,9 @@ export default function FeaturedProjects() {
           <Link to="/projects" className="featured-cta">
             Explore All Projects
             <LuArrowRight aria-hidden="true" />
+          </Link>
+          <Link to="/contact" className="featured-cta featured-cta--outline">
+            Schedule a Site Visit
           </Link>
         </div>
       </div>
